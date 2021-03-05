@@ -1,27 +1,25 @@
 # Game
 import pygame as pg
-from observer import Observer
 import time
 
-pg.init()
-screen = pg.display.set_mode((800,500))
+from observer import Observer
+from util import *
 
 class State(object):
 
     def __init__(self,surface=None):
+        self.size = (800,500)
         if surface == None:
-            self.screen  = pg.display.set_mode((800,500))
+            self.screen  = pg.display.set_mode(self.size)
         else:
             self.screen = surface
 
         self.running = True
         
-        self.sprites = pg.sprite.Group()
-        
         self.event = Observer()
         self.event.on("update",self.get_events)
-        self.event.on("update",self.render)
-    
+        self.event.on("event",gate(self.quit,type=pg.QUIT))
+
     def quit(self):
         self.running = False
         self.event.fire("quit")
@@ -39,15 +37,8 @@ class State(object):
 
     def get_events(self,delta):
         for e in pg.event.get():
-            print(e)
             self.event.fire("event",e)
-            if e.type == pg.QUIT:
-                self.quit()
-    
-    def render(self,delta):
-        self.screen.fill((0,0,0))
-        pg.draw.circle(screen,(255,0,255),(400,250),100,5)
-        pg.display.flip()
 
-state = State()
-state.loop()
+if __name__ == "__main__":
+    state = State()
+    state.loop()

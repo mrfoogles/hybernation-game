@@ -9,7 +9,6 @@ class Observer(object):
             self.listeners[event].append(fn)
         else:
             self.listeners[event] = [fn]
-        print(f"{event}: {self.listeners[event]}")
     
     def fire(self,event,*args):
         if event in self.listeners:
